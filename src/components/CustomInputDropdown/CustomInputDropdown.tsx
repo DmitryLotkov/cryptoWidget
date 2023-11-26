@@ -32,7 +32,6 @@ export const CustomInputDropdown: FC<CustomInputDropdownProps> = React.memo((pro
                     <option
                       key={index}
                       value={item.ticker}
-                      style={{ backgroundImage: `url("${item.image}")` }}
                     >
                       {item.ticker.toUpperCase()}
                     </option>
@@ -48,7 +47,6 @@ export const CustomInputDropdown: FC<CustomInputDropdownProps> = React.memo((pro
                 {props.currencyList &&
                   props.currencyList.map((item, index) => (
                     <option
-                      style={{ backgroundImage: `url(${item.image})` }}
                       key={index}
                     >
                       {item.ticker.toUpperCase()}
