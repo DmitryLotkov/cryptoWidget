@@ -29,7 +29,11 @@ export const CustomInputDropdown: FC<CustomInputDropdownProps> = React.memo((pro
               <StyledSelect onChange={handleLeftDropDown}>
                 {props.currencyList &&
                   props.currencyList.map((item, index) => (
-                    <option key={index} value={item.ticker}>
+                    <option
+                      key={index}
+                      value={item.ticker}
+                      style={{ backgroundImage: `url("${item.image}")` }}
+                    >
                       {item.ticker.toUpperCase()}
                     </option>
                   ))}

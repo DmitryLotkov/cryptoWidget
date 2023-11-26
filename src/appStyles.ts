@@ -59,8 +59,9 @@ export const StyledDropDowns = styled.div`
     flex-direction: column;
     row-gap: 16px;
     img {
-      transform: rotate(90);
-      text-align: end;
+      transform: rotate(90deg);
+      margin-left: auto;
+      display: block;
     }
   }
 `
