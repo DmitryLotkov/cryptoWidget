@@ -1,74 +1,63 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './App.scss'
 import { CustomInputDropdown } from './components/CustomInputDropdown/CustomInputDropdown'
 import swapImg from './assets/icons/swap.svg'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from './store/store'
-import { CurrencyItem } from './services/api'
+import { CurrencyItem, MinExchangeAmountStateType } from './services/api'
 import {
   getEstimatedExchangeAmountTC,
   getListOfAvailableCurrenciesTC,
   getMinimalExchangeAmountTC,
 } from './store/currencyData/currencyReducer'
-
-const Wrapper = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  width: 960px;
-`
-
-const Title = styled.p`
-  color: #282828;
-  font-family: Roboto, serif;
-  font-size: 50px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: 120%;
-  margin: 0;
-`
-
-const SubTitle = styled.p`
-  color: #282828;
-  font-family: Roboto, serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 100%; /* 20px */
-  margin: 0;
-`
-
-const Titles = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 16px;
-  align-items: start;
-`
-
-const DropDowns = styled.div`
-  display: flex;
-  flex-direction: row;
-  column-gap: 29px;
-`
+import { NullableType } from './store/app/app-reducer'
+import { LinearProgress } from '@mui/material'
+import {
+  StyledButton,
+  StyledButtonAndInput,
+  StyledDropDowns, StyledErrorText, StyledInput,
+  StyledLinearProgressWrapper, StyledParagraph,
+  StyledSubTitle,
+  StyledTitle,
+  StyledTitles,
+  StyledWrapper,
+} from './appStyles'
 
 function App() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const currencyList = useAppSelector<CurrencyItem[]>(state => state.currenciesData.currencyList);
   const minAmount = useAppSelector<number>(state => state.currenciesData.minAmount);
-  const estimatedAmount = useAppSelector<number>(state => state.currenciesData.estimatedAmount);
+  const estimatedAmount = useAppSelector<number | string>(state => state.currenciesData.estimatedAmount);
+  const appError = useAppSelector<NullableType<string>>(state => state.app.error);
+  const isLoading = useAppSelector<boolean>(state => state.app.isLoading);
+
   const [firstTicker, setFirstTicker] = useState("");
   const [secondTicker, setSecondTicker] = useState("");
 
-  useEffect(() => {
-    dispatch(getListOfAvailableCurrenciesTC());
-    if(firstTicker && secondTicker ){
-      dispatch(getMinimalExchangeAmountTC({ firstTicker, secondTicker }));
+  const prevFirstTicker = useRef<string | null>(null);
+  const prevSecondTicker = useRef<string | null>(null);
 
-      if(minAmount){
-        dispatch(getEstimatedExchangeAmountTC({minAmount, firstTicker, secondTicker}))
-      }
+  useEffect(() => {
+    if (!currencyList) {
+      dispatch(getListOfAvailableCurrenciesTC());
     }
 
-  }, [dispatch, firstTicker, minAmount, secondTicker])
+    if (
+      firstTicker &&
+      secondTicker &&
+      (firstTicker !== prevFirstTicker.current || secondTicker !== prevSecondTicker.current)
+    ) {
+      dispatch(getMinimalExchangeAmountTC({ firstTicker, secondTicker })).unwrap().then((data: MinExchangeAmountStateType | { error: string })=>{
+        const resp = data as MinExchangeAmountStateType;
+        dispatch(getEstimatedExchangeAmountTC({ minAmount: resp.minAmount, firstTicker, secondTicker }));
+      });
+
+      prevFirstTicker.current = firstTicker;
+      prevSecondTicker.current = secondTicker;
+
+    }
+  }, [dispatch, minAmount, firstTicker, secondTicker, currencyList]);
+
 
 
   const  getLeftTicker = useCallback((value: string) => {
@@ -80,22 +69,33 @@ function App() {
   }, []);
 
   return (
-    <Wrapper>
-      <Titles>
-        <Title>Crypto Exchange</Title>
-        <SubTitle>Exchange fast and easy</SubTitle>
-      </Titles>
+    <>
+      {isLoading &&
+        <StyledLinearProgressWrapper>
+          <LinearProgress sx={{ background: '#11B3FE' }} />
+        </StyledLinearProgressWrapper>
+      }
+      <StyledWrapper>
+      <StyledTitles>
+        <StyledTitle>Crypto Exchange</StyledTitle>
+        <StyledSubTitle>Exchange fast and easy</StyledSubTitle>
+      </StyledTitles>
 
-      <DropDowns>
-        <CustomInputDropdown currencyList={currencyList} minAmount={minAmount} inputType={'left'} getCurrent={getLeftTicker} />
-        <img src={swapImg} alt='swapImg' />
-        <CustomInputDropdown currencyList={currencyList} estimatedAmount={estimatedAmount} inputType={'right'} getCurrent={getRightTicker} />
-      </DropDowns>
+      <StyledDropDowns>
+        <CustomInputDropdown currencyList={currencyList} minAmount={minAmount} inputType={'left'}
+                             getCurrent={getLeftTicker} />
+        <img src={swapImg} alt='swapImg' width={24} />
+        <CustomInputDropdown currencyList={currencyList} estimatedAmount={estimatedAmount} inputType={'right'}
+                             getCurrent={getRightTicker} />
+        <StyledErrorText>{appError}</StyledErrorText>
+      </StyledDropDowns>
 
-      <p>Your Ethereum address</p>
-      <input />
-      <button>Exchange</button>
-    </Wrapper>
+      <StyledParagraph>Your Ethereum address</StyledParagraph>
+      <StyledButtonAndInput>
+        <StyledInput />
+        <StyledButton>EXCHANGE</StyledButton>
+      </StyledButtonAndInput>
+    </StyledWrapper></>
   )
 }
 

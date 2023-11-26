@@ -20,7 +20,7 @@ export interface CurrencyItemWithId extends CurrencyItem {
 }
 
 export type EstimatedExchangeAmount = {
-    estimatedAmount: number;
+    estimatedAmount: number | string;
     transactionSpeedForecast: string,
     warningMessage: null | string
 }
@@ -35,7 +35,7 @@ export const cryptoMainApi = {
         return instance.get<CurrencyItem[]>(`/currencies?active=true&fixedRate=true`);
     },
     getMinimalExchangeAmount(params: {firstTicker: string, secondTicker: string}){
-        return instance.get<MinExchangeAmountStateType>(`/min-amount/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`);
+        return instance.get<MinExchangeAmountStateType | { error: string }>(`/min-amount/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`);
     },
     getEstimatedExchangeAmount(params: {minAmount: number, firstTicker: string, secondTicker: string}){
         return instance.get<EstimatedExchangeAmount>(`/exchange-amount/${params.minAmount}/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`);
