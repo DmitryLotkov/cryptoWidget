@@ -17,10 +17,6 @@ export interface CurrencyItem {
   supportsFixedRate: boolean;
 }
 
-export interface CurrencyItemWithId extends CurrencyItem {
-  id: number
-}
-
 export type EstimatedExchangeAmount = {
   estimatedAmount: number | string;
   transactionSpeedForecast: string,
