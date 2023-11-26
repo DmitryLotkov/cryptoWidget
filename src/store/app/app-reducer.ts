@@ -1,9 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-//status = loading - крутилку показываем
+
 const initialState = {
-    status: 'loading' as RequestStatusType,
+    isLoading: false,
     error: null as NullableType<string>
 }
 export type NullableType<T> = null | T
@@ -13,8 +12,8 @@ const slice = createSlice({
     name: "app",
     initialState: initialState,
     reducers: {
-        setAppStatusAC(state, action: PayloadAction<{status: RequestStatusType}>){
-            state.status = action.payload.status
+        setAppStatusAC(state, action: PayloadAction<{isLoading: boolean}>){
+            state.isLoading = action.payload.isLoading
         },
         setAppErrorAC(state, action: PayloadAction<{error: NullableType<string>}>){
             state.error = action.payload.error

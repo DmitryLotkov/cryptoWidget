@@ -5,7 +5,7 @@ export const instance = axios.create({
 })
 const api_key = "c9155859d90d239f909d2906233816b26cd8cf5ede44702d422667672b58b0cd"
 //types
-export type CurrencyItem = {
+export interface CurrencyItem  {
     ticker: string;
     name: string;
     image: string;
@@ -14,7 +14,10 @@ export type CurrencyItem = {
     featured: boolean;
     isStable: boolean;
     supportsFixedRate: boolean;
-};
+}
+export interface CurrencyItemWithId extends CurrencyItem {
+    id: number
+}
 
 export type EstimatedExchangeAmount = {
     estimatedAmount: number;
@@ -22,7 +25,7 @@ export type EstimatedExchangeAmount = {
     warningMessage: null | string
 }
 
-export type MinExchangeAmount = {
+export type MinExchangeAmountStateType = {
     minAmount: number
 }
 
@@ -31,10 +34,10 @@ export const cryptoMainApi = {
     getListOfAvailableCurrencies(){
         return instance.get<CurrencyItem[]>(`/currencies?active=true&fixedRate=true`);
     },
-    getMinimalExchangeAmount(){
-        return instance.get<MinExchangeAmount>(`/currencies-to/min-amount/:from_to?api_key=${api_key}`);
+    getMinimalExchangeAmount(params: {firstTicker: string, secondTicker: string}){
+        return instance.get<MinExchangeAmountStateType>(`/min-amount/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`);
     },
-    getEstimatedExchangeAmount(){
-        return instance.get<EstimatedExchangeAmount>(`/exchange-amount/:send_amount/:from_to/?api_key=${api_key}`);
+    getEstimatedExchangeAmount(params: {minAmount: number, firstTicker: string, secondTicker: string}){
+        return instance.get<EstimatedExchangeAmount>(`/exchange-amount/${params.minAmount}/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`);
     }
 }

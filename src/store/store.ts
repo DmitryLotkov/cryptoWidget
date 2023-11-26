@@ -1,8 +1,8 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit'
-import thunkMiddleware from "redux-thunk";
-import {appReducer} from "./app-reducer";
-import {currenciesListReducer} from "./currencyReducer";
-import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import thunkMiddleware from 'redux-thunk';
+import {appReducer} from './app/app-reducer';
+import {currenciesListReducer} from './currencyData/currencyReducer';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 export const rootReducer = combineReducers({
     app: appReducer,
