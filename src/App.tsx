@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import './App.scss'
 import { CustomInputDropdown } from './components/CustomInputDropdown/CustomInputDropdown'
 import swapImg from './assets/icons/swap.svg'
 import { useAppDispatch, useAppSelector } from './store/store'
