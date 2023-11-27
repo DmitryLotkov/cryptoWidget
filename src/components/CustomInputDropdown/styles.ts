@@ -5,6 +5,16 @@ export const StyledInputAndSelect = styled.div`
   height: 50px;
   border-radius: 5px;
   border: 1px solid #E3EBEF;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type=number]{
+    -moz-appearance: textfield;
+  }
+  
   &:focus {
     border-color: #C1D9E5;
   }

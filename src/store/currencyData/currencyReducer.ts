@@ -6,7 +6,7 @@ import { cryptoMainApi, CurrencyItem, MinExchangeAmountStateType } from '../../s
 //types
 export type CurrencyStateType = {
   currencyList: CurrencyItem[];
-  minAmount: number;
+  minAmount: string;
   estimatedAmount: string;
 }
 
@@ -51,7 +51,7 @@ export const getMinimalExchangeAmountTC = createAsyncThunk('getMinimalExchangeAm
   })
 
 export const getEstimatedExchangeAmountTC = createAsyncThunk('getEstimatedExchangeAmount',
-  async (params: { minAmount: number, firstTicker: string, secondTicker: string }, thunkAPI) => {
+  async (params: { minAmount: string, firstTicker: string, secondTicker: string }, thunkAPI) => {
     thunkAPI.dispatch(setAppStatusAC({ isLoading: true }))
 
     try {

@@ -24,7 +24,7 @@ export type EstimatedExchangeAmount = {
 }
 
 export type MinExchangeAmountStateType = {
-  minAmount: number
+  minAmount: string
 }
 
 //api
@@ -37,7 +37,7 @@ export const cryptoMainApi = {
       error: string
     }>(`/min-amount/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`)
   },
-  getEstimatedExchangeAmount(params: { minAmount: number, firstTicker: string, secondTicker: string }) {
+  getEstimatedExchangeAmount(params: { minAmount: string, firstTicker: string, secondTicker: string }) {
     return instance.get<EstimatedExchangeAmount>(`/exchange-amount/${params.minAmount}/${params.firstTicker}_${params.secondTicker}?api_key=${api_key}`)
   },
 }

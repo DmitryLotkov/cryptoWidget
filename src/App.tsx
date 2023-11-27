@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CustomInputDropdown } from './components/CustomInputDropdown/CustomInputDropdown'
+import { EstimatedAmountInputDropdown } from './components/CustomInputDropdown/EstimatedAmountInputDropdown'
 import swapImg from './assets/icons/swap.svg'
 import { useAppDispatch, useAppSelector } from './store/store'
 import { CurrencyItem, MinExchangeAmountStateType } from './services/api'
@@ -23,12 +23,13 @@ import {
   StyledTitles,
   StyledWrapper,
 } from './appStyles'
+import { MinAmountInputDropdown } from './components/CustomInputDropdown/MinAmountInputDropdown'
 
 function App() {
   const dispatch = useAppDispatch()
   const currencyList = useAppSelector<CurrencyItem[]>(state => state.currenciesData.currencyList)
-  const minAmount = useAppSelector<number>(state => state.currenciesData.minAmount)
-  const estimatedAmount = useAppSelector<number | string>(state => state.currenciesData.estimatedAmount)
+  const minAmount = useAppSelector<string>(state => state.currenciesData.minAmount)
+  const estimatedAmount = useAppSelector<string>(state => state.currenciesData.estimatedAmount)
   const appError = useAppSelector<NullableType<string>>(state => state.app.error)
   const isLoading = useAppSelector<boolean>(state => state.app.isLoading)
 
@@ -85,11 +86,13 @@ function App() {
         </StyledTitles>
 
         <StyledDropDowns>
-          <CustomInputDropdown currencyList={currencyList} minAmount={minAmount} inputType={'left'}
-                               getCurrent={getLeftTicker} />
+          <MinAmountInputDropdown currencyList={currencyList}
+                                  minAmount={minAmount}
+                                  getCurrent={getLeftTicker} />
           <img src={swapImg} alt='swapImg' width={24} />
-          <CustomInputDropdown currencyList={currencyList} estimatedAmount={estimatedAmount} inputType={'right'}
-                               getCurrent={getRightTicker} />
+          <EstimatedAmountInputDropdown currencyList={currencyList}
+                                        estimatedAmount={estimatedAmount}
+                                        getCurrent={getRightTicker} />
           <StyledErrorText>{appError}</StyledErrorText>
         </StyledDropDowns>
 
@@ -98,7 +101,8 @@ function App() {
           <StyledInput />
           <StyledButton>EXCHANGE</StyledButton>
         </StyledButtonAndInput>
-      </StyledWrapper></>
+      </StyledWrapper>
+    </>
   )
 }
 

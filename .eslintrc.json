@@ -17,6 +17,7 @@
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["off"],
     "@typescript-eslint/no-explicit-any": ["off"],
+    "react/display-name": "off",
     "no-debugger":"warn",
     "react/prop-types": "off"
     // Add your custom rules here
